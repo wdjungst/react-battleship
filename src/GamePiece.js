@@ -7,6 +7,7 @@ const ShipContainer = styled.div`
 
 const Ship = styled.div`
   border-radius: 25px;
+  border: ${ props => props.selected ? 'solid 4px green' : 'none' };
   background-color: darkgrey;
   width: ${ props => `${props.size * 50}px` };
   height: 50px;
@@ -22,13 +23,27 @@ const VShip = Ship.extend`
 `
 
 class GamePiece extends React.Component {
-  state = { orientation: 'row' }
+  state = { orientation: 'row', selected: false, used: false, pins: [] }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.hold !== this.props.hold) {
-      if (!nextProps.hold)
+    if (nextProps !== this.props) {
+      if (!nextProps.hold) 
         this.setState({ orientation: 'row' })
+      if (nextProps.keepSelected !== this.props.selected) {
+        this.setState({ selected: nextProps.keepSelected })
+      }
     }
+  }
+
+  select = () => {
+    this.setState( state => {
+      if (state.selected) {
+        return { selected: false }
+      } else {
+        this.props.unSelect(this.props.name)
+        return { selected: true }
+      }
+    })
   }
 
   flip = () => {
@@ -46,12 +61,12 @@ class GamePiece extends React.Component {
   }
 
   render() {
-    const { orientation } = this.state;
+    const { orientation, selected } = this.state;
     const { size, name } = this.props;
     const Component = orientation === 'row' ? Ship : VShip;
     return (
-      <ShipContainer onDoubleClick={this.flip}>
-        <Component size={size} orientation={orientation}>
+      <ShipContainer onDoubleClick={this.flip} onClick={this.select}>
+        <Component size={size} orientation={orientation} selected={selected}>
           <span>
             { name }
           </span>

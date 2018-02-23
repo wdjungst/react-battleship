@@ -21,23 +21,31 @@ class App extends React.Component {
       { name: 'Submarine', size: 3 },
       { name: 'Destroyer', size: 2 },
     ],
-    flipped: null
+    flipped: null,
+    selected: null,
   }
 
   flipAll = (name) => {
     this.setState({ flipped: name });
   }
 
+  unSelect = (name) => {
+    this.setState({ selected: name });
+  }
+
   gamePieces = () => {
     return this.state.pieces.map( ship => { 
-        let { flipped } = this.state;
+        let { flipped, selected } = this.state;
         let hold = flipped === ship.name
+        let keepSelected = selected === ship.name;
         return (
           <GamePiece 
             key={ship.name} 
             {...ship} 
             hold={hold} 
+            keepSelected={keepSelected}
             flipAll={this.flipAll}
+            unSelect={this.unSelect}
           />
         )
       }
