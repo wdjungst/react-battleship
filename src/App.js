@@ -30,7 +30,10 @@ class App extends React.Component {
   }
 
   unSelect = (name) => {
-    this.setState({ selected: name });
+    if (name === this.state.selected)
+      this.setState({ selcted: null })
+    else
+      this.setState({ selected: name });
   }
 
   gamePieces = () => {
@@ -53,12 +56,13 @@ class App extends React.Component {
   }
 
   render() {
+    const playable = this.state.selected ? true : false
     return (
       <Wrapper>
         <Pieces>
           { this.gamePieces() }
         </Pieces>
-        <Board />
+        <Board playable={playable} />
       </Wrapper>
     )
   }

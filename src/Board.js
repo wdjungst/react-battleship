@@ -17,9 +17,9 @@ class Board extends React.Component {
   grid = () => {
     let gameBoard = this.xGrid.map( (x,xInt) => {
       return this.yGrid.map( (y,yInt) => 
-      <Grid.Column key={`${x}:${y}`}>
-        <Sector x={x} y={y} yInt={yInt} xInt={xInt} letter={this.xGrid[yInt]} number={this.yGrid[xInt]} />
-      </Grid.Column>
+        <Grid.Column key={`${x}:${y}`}>
+          <Sector selectable={this.props.playable} x={this.xGrid[yInt]} y={this.yGrid[xInt]} yInt={yInt} xInt={xInt} letter={this.xGrid[yInt]} number={this.yGrid[xInt]} />
+        </Grid.Column>
     )
     })
 

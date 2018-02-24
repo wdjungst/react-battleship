@@ -40,10 +40,11 @@ class GamePiece extends React.Component {
       if (state.selected) {
         return { selected: false }
       } else {
-        this.props.unSelect(this.props.name)
         return { selected: true }
       }
     })
+
+    this.props.unSelect(this.props.name)
   }
 
   flip = () => {
