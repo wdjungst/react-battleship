@@ -60,23 +60,60 @@ class Board extends React.Component {
     return gb;
   }
 
+  validateShipCanFit = (row, ship) => {
+    let fits = false;
+    let i = 0;
+    let seq =0;
+    let results = [];
+    let str = row.join('');
+    while(i < str.length) {
+      let current = str[i] 
+      let next = str[i + 1];
+      if (typeof results[seq] === 'undefined') {
+        results[seq] = [current, 0];
+      }
+
+      results[seq][1]++;
+      if (current !== next) {
+        seq++
+      }
+
+      i++
+    }
+  
+    fits = results.find( r => r[0] === '0' && r[1] >= ship.size )
+
+    return fits;
+  }
+
   startSelect = (x,y) => {
     const { selected } = this.props;
+    let fits;
     const gb = this.state.gameboard.map( (row, rowi) => {
-      return row.map( (c, i) => { 
-        if (c !== 0)
-          return c
-        else if (i === 0)
-          return c
-        else if ( y === rowi && i === x + (selected.size - 1) || y === rowi && i === x - (selected.size - 1))
-          return 'p'
-        else if (y === rowi && x === i)
-          return 's'
-        return c
-      });
+      if (rowi === y) {
+        fits = this.validateShipCanFit(row, selected) 
+        if (fits) {
+          return row.map( (c, i) => { 
+            if (c !== 0)
+              return c
+            else if (i === 0)
+              return c
+            else if ( y === rowi && i === x + (selected.size - 1) || y === rowi && i === x - (selected.size - 1))
+              return 'p'
+            else if (y === rowi && x === i)
+              return 's'
+            return c
+          });
+        } else {
+          return row
+        }
+      } else {
+        return row;
+      }
     });
 
-    this.setState({ gameboard: gb })
+    const set = fits ? 0 : 1	
+    this.setState({ gameboard: gb, set })
   }
 
   endSelect = (x,y) => {
