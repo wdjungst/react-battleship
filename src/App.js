@@ -29,7 +29,26 @@ class App extends React.Component {
     this.setState({ flipped: name });
   }
 
-  unSelect = (name) => {
+  updateSelected = (ship, distances, axis) => {
+    const { pieces } = this.state;
+    //TODO make this work for both axis
+    const loc = distances.map( x => {
+      return { x, y: axis }
+    });
+
+    const usedShip = {...ship, loc};
+    this.setState({ 
+      pieces: pieces.map( p => {
+        if (p.name === ship.name)
+          return usedShip
+        return p
+      })
+    })
+
+    this.unSelect()
+  }
+
+  unSelect = (name = null) => {
     if (name === this.state.selected)
       this.setState({ selcted: null })
     else
@@ -37,7 +56,9 @@ class App extends React.Component {
   }
 
   gamePieces = () => {
-    return this.state.pieces.map( ship => { 
+    return this.state.pieces.filter( obj => {
+      return !obj.hasOwnProperty('loc')
+    }).map( ship => { 
         let { flipped, selected } = this.state;
         let hold = flipped === ship.name
         let keepSelected = selected === ship.name;
@@ -66,7 +87,7 @@ class App extends React.Component {
         <Pieces>
           { this.gamePieces() }
         </Pieces>
-        <Board playable={playable} selected={this.findShip()} />
+        <Board playable={playable} selected={this.findShip()} updateSelected={this.updateSelected} />
       </Wrapper>
     )
   }

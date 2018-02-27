@@ -64,9 +64,13 @@ class Board extends React.Component {
     const { selected } = this.props;
     const gb = this.state.gameboard.map( (row, rowi) => {
       return row.map( (c, i) => { 
-        if ( y === rowi && i === x + (selected.size - 1) || y === rowi && i === x - (selected.size - 1))
+        if (c !== 0)
+          return c
+        else if (i === 0)
+          return c
+        else if ( y === rowi && i === x + (selected.size - 1) || y === rowi && i === x - (selected.size - 1))
           return 'p'
-        if (y === rowi && x === i)
+        else if (y === rowi && x === i)
           return 's'
         return c
       });
@@ -76,19 +80,37 @@ class Board extends React.Component {
   }
 
   endSelect = (x,y) => {
-    const { selected } = this.props;
+    const { selected, selectedShips } = this.props;
+    let indexes = [];
+    let shipRow;
     const gb = this.state.gameboard.map( (row, rowi) => {
       if (row.includes('s')) {
+        shipRow = rowi;
+        let s = row.findIndex( c => c == 's')
+        let start = x < s ? x : s
+        let end = start === x ? s : x
+        const header = new RegExp(/^([A-J]|[1-9]|10)$/)
+
+        for (let i = start; i <= end; i++) {
+          indexes.push(i);
+        }
+
         return row.map( (c, i) => {
-          if (i === x || c === 's') 
-            return selected.name.split("")[0]
+
+          if (c === 'ship')
+            return c;
+          else if (header.test(c))
+            return c;
+          else if (indexes.includes(i))
+            return 'ship'
           return 0
         })
       } else {
         return row
       }
     });
-    
+
+    this.setState({ gameboard: gb }, () => this.props.updateSelected(selected, indexes, shipRow) );
   }
 
   render() {

@@ -24,7 +24,7 @@ const Letter = styled.span`
 `
 
 class Sector extends React.Component {
-  state = { selectable: false, used: false, set: 0 }
+  state = { selectable: null, used: false, set: 0 }
 
   componentWillReceiveProps(nextProps) {
     let p = this.props;
@@ -41,6 +41,8 @@ class Sector extends React.Component {
     const header = new RegExp(/^([A-J]|[1-9]|10)$/)
     if (locationX === 0 && locationY === 0)
       return <Bubble name='flag' />
+    else if (value === 'ship')
+      return <Bubble name='flag' />
     else if (header.test(value))
       return <Letter>{value}</Letter>
     else
@@ -48,13 +50,16 @@ class Sector extends React.Component {
   }
 
   select = () => {
-    const { locationX: x, locationY: y, set, toggleSet, startSelect, endSelect } = this.props;
+    const { locationX: x, locationY: y, set, toggleSet, startSelect, endSelect, value } = this.props;
     switch (set) {
       case 0:
         startSelect(x,y);
         break;
       case 1:
-        endSelect(x,y);
+        if (value === 'p') 
+          endSelect(x,y);
+        else
+          return
     }
 
     toggleSet();
@@ -63,7 +68,7 @@ class Sector extends React.Component {
   render() {
     const { selectable, used } = this.state;
     return (
-      <Container raised selectable={selectable} used={used}  onClick={ selectable ? this.select : f => f }>
+      <Container raised selectable={selectable == true && selectable} used={used}  onClick={ selectable ? this.select : f => f }>
         { this.getChar() }
       </Container>
     )
