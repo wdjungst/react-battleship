@@ -24,7 +24,7 @@ const Letter = styled.span`
 `
 
 class Sector extends React.Component {
-  state = { selectable: false, used: false }
+  state = { selectable: false, used: false, set: 0 }
 
   componentWillReceiveProps(nextProps) {
     let p = this.props;
@@ -35,21 +35,29 @@ class Sector extends React.Component {
   }
 
   getChar = () => {
-    const { xInt, yInt, letter, number } = this.props;
+    const { value, locationX, locationY } = this.props;
     const { selectable, used } = this.state;
-    let props = { selectable, used }
-    if (xInt === 0 && yInt === 0)
+    const props = { selectable, used }
+    const header = new RegExp(/^([A-J]|[1-9]|10)$/)
+    if (locationX === 0 && locationY === 0)
       return <Bubble name='flag' />
-    else if (xInt === 0) 
-      return <Letter>{letter}</Letter>
-    else if (yInt === 0)
-      return <Letter>{number}</Letter>
+    else if (header.test(value))
+      return <Letter>{value}</Letter>
     else
-      return <Bubble {...props} name='circle' />
+      return <Bubble {...props} name={ (value === 's' || value === 'p') ? 'hand pointer': 'circle'} />
   }
 
   select = () => {
-    console.log(`x: ${this.props.x} y: ${this.props.y}`)
+    const { locationX: x, locationY: y, set, toggleSet, startSelect, endSelect } = this.props;
+    switch (set) {
+      case 0:
+        startSelect(x,y);
+        break;
+      case 1:
+        endSelect(x,y);
+    }
+
+    toggleSet();
   }
 
   render() {

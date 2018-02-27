@@ -55,6 +55,10 @@ class App extends React.Component {
     )
   }
 
+  findShip = () => {
+    return this.state.pieces.find( p => p.name === this.state.selected );
+  }
+
   render() {
     const playable = this.state.selected ? true : false
     return (
@@ -62,7 +66,7 @@ class App extends React.Component {
         <Pieces>
           { this.gamePieces() }
         </Pieces>
-        <Board playable={playable} />
+        <Board playable={playable} selected={this.findShip()} />
       </Wrapper>
     )
   }
