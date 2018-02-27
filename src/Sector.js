@@ -12,7 +12,7 @@ const Container = styled(Segment)`
 `
 
 const Bubble = styled(Icon)`
-  color: ${ props => props.selectable ? 'white' : 'grey' };
+  color: ${ props => getColor(props.selectable, props.value)};
   backgroundColor: ${ props => props.used ? 'green' : 'none' };
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 `
@@ -22,6 +22,15 @@ const Letter = styled.span`
   font-size: 2em;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 `
+
+const getColor = (selectable, value = null) => {
+  let color = 'grey';
+  if (selectable)
+    color = 'white'
+  if (value === 'ship')
+    color = 'lime' 
+  return color;
+}
 
 class Sector extends React.Component {
   state = { selectable: null, used: false, set: 0 }
@@ -42,7 +51,7 @@ class Sector extends React.Component {
     if (locationX === 0 && locationY === 0)
       return <Bubble name='flag' />
     else if (value === 'ship')
-      return <Bubble name='flag' />
+      return <Bubble value={value} name='flag' />
     else if (header.test(value))
       return <Letter>{value}</Letter>
     else
@@ -68,7 +77,12 @@ class Sector extends React.Component {
   render() {
     const { selectable, used } = this.state;
     return (
-      <Container raised selectable={selectable == true && selectable} used={used}  onClick={ selectable ? this.select : f => f }>
+      <Container 
+        raised 
+        selectable={selectable == true && selectable} 
+        used={used}  
+        onClick={ selectable ? this.select : f => f }
+      >
         { this.getChar() }
       </Container>
     )
