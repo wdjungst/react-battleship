@@ -126,13 +126,13 @@ class Board extends React.Component {
   }
 
   endSelect = (x,y) => {
-    const { selected, selectedShips } = this.props;
+    const { selected } = this.props;
     let indexes = [];
     let shipRow;
     const gb = this.state.gameboard.map( (row, rowi) => {
       if (row.includes('s')) {
         shipRow = rowi;
-        let s = row.findIndex( c => c == 's')
+        let s = row.findIndex( c => c === 's')
         let start = x < s ? x : s
         let end = start === x ? s : x
         const header = new RegExp(/^([A-J]|[1-9]|10)$/)

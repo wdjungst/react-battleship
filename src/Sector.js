@@ -36,7 +36,6 @@ class Sector extends React.Component {
   state = { selectable: null, used: false, set: 0 }
 
   componentWillReceiveProps(nextProps) {
-    let p = this.props;
     if (this.props !== nextProps) {
       if (!this.state.used && nextProps.selectable)
         this.setState({ selectable: true });
@@ -65,10 +64,14 @@ class Sector extends React.Component {
         startSelect(x,y);
         break;
       case 1:
-        if (value === 'p') 
+        if (value === 'p') { 
           endSelect(x,y);
-        else
+          break
+         } else {
           return
+         }
+      default:
+        return
     }
 
     toggleSet();
@@ -79,7 +82,7 @@ class Sector extends React.Component {
     return (
       <Container 
         raised 
-        selectable={selectable == true && selectable} 
+        selectable={selectable === true && selectable} 
         used={used}  
         onClick={ selectable ? this.select : f => f }
       >
