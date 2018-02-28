@@ -70,12 +70,10 @@ class Board extends React.Component {
     const { selected } = this.props;
     let fits;
     let selectedRow;
-    let original;
     let set;
     let gb = this.state.gameboard.map( (row, rowi) => {
       if (rowi === y) {
         selectedRow = rowi;
-        original = row;
         return row.map( (c, i) => { 
           if (c !== 0)
             return c
