@@ -67,6 +67,7 @@ class Board extends React.Component {
   }
 
   startSelect = (x,y) => {
+    //TODO this only validates left and right SMH
     const { selected } = this.props;
     let fits;
     let selectedRow;
@@ -96,7 +97,7 @@ class Board extends React.Component {
     const code = gb[selectedRow]
     const temp = code.filter( c => c === 'p' ).length
     const placed = code.filter( c => c === 's' ).length
-    fits = temp === 2 && placed === 1
+    fits = temp >= 1 && placed === 1
     if (fits) {
       set = 0
     } else {
