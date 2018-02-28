@@ -67,7 +67,9 @@ class Board extends React.Component {
   }
 
   startSelect = (x,y) => {
-    //TODO this only validates left and right SMH
+    //TODO Something is wrong with checking left
+    //Place a ship in f => right
+    //Place a carier to the left
     const { selected } = this.props;
     let fits;
     let selectedRow;
@@ -82,7 +84,7 @@ class Board extends React.Component {
             return c
           else if ( this.validateShipCanFit(row.slice(x, x + selected.size), selected) && i === x + (selected.size - 1))
             return 'p'
-          else if ( this.validateShipCanFit(row.slice(x - selected.size, x), selected) && i === x - (selected.size - 1))
+          else if ( this.validateShipCanFit(row.slice(x - (selected.size - 1), x), selected) && i === x - (selected.size - 1)) //Problem line
             return 'p'
           else if (y === rowi && x === i)
             return 's'
