@@ -30,6 +30,20 @@ class Board extends React.Component {
     set: 0,
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selected !== this.props.selected && this.props.selected !== null) {
+      const gb = this.state.gameboard.map( row => {
+        return row.map( c => {
+          if (c === 'p' || c === 's')
+            return 0
+          return c
+        })
+      });
+
+      this.setState({ gameboard: gb, set: 0 });
+    }
+  }
+
   toggleSet = () => {
     this.setState( state => {
       const set = state.set === 0 ? 1 : 0
