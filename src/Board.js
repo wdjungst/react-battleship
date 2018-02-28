@@ -75,17 +75,12 @@ class Board extends React.Component {
   }
 
   validateShipCanFit = (row, ship, direction = null) => {
-    if (direction === 'left')
-      debugger
     let fits = false;
     fits = row.filter( c => c === 0 ).length === ship.size
     return fits;
   }
 
   startSelect = (x,y) => {
-    //TODO Something is wrong with checking left
-    //Place a ship in f => right
-    //Place a carier to the left
     const { selected } = this.props;
     let fits;
     let selectedRow;
@@ -100,7 +95,7 @@ class Board extends React.Component {
             return c
           else if ( this.validateShipCanFit(row.slice(x, x + selected.size), selected) && i === x + (selected.size - 1))
             return 'p'
-          else if ( this.validateShipCanFit(row.slice(x - (selected.size - 1), x + 1), selected, 'left') && i === x - (selected.size - 1)) //Problem line
+          else if ( this.validateShipCanFit(row.slice(x - (selected.size - 1), x + 1), selected, 'left') && i === x - (selected.size - 1)) 
             return 'p'
           else if (y === rowi && x === i)
             return 's'
