@@ -62,57 +62,49 @@ class Board extends React.Component {
 
   validateShipCanFit = (row, ship) => {
     let fits = false;
-    let i = 0;
-    let seq =0;
-    let results = [];
-    let str = row.join('');
-    while(i < str.length) {
-      let current = str[i] 
-      let next = str[i + 1];
-      if (typeof results[seq] === 'undefined') {
-        results[seq] = [current, 0];
-      }
-
-      results[seq][1]++;
-      if (current !== next) {
-        seq++
-      }
-
-      i++
-    }
-  
-    fits = results.find( r => r[0] === '0' && r[1] >= ship.size )
-
+    fits = row.filter( c => c === 0 ).length === ship.size
     return fits;
   }
 
   startSelect = (x,y) => {
     const { selected } = this.props;
     let fits;
-    const gb = this.state.gameboard.map( (row, rowi) => {
+    let selectedRow;
+    let original;
+    let set;
+    let gb = this.state.gameboard.map( (row, rowi) => {
       if (rowi === y) {
-        fits = this.validateShipCanFit(row, selected) 
-        if (fits) {
-          return row.map( (c, i) => { 
-            if (c !== 0)
-              return c
-            else if (i === 0)
-              return c
-            else if ( y === rowi && i === x + (selected.size - 1) || y === rowi && i === x - (selected.size - 1))
-              return 'p'
-            else if (y === rowi && x === i)
-              return 's'
+        selectedRow = rowi;
+        original = row;
+        return row.map( (c, i) => { 
+          if (c !== 0)
             return c
-          });
-        } else {
-          return row
-        }
+          else if (i === 0)
+            return c
+          else if ( this.validateShipCanFit(row.slice(x, x + selected.size), selected) && i === x + (selected.size - 1))
+            return 'p'
+          else if ( this.validateShipCanFit(row.slice(x - selected.size, x), selected) && i === x - (selected.size - 1))
+            return 'p'
+          else if (y === rowi && x === i)
+            return 's'
+          return c
+        });
       } else {
         return row;
       }
     });
 
-    const set = fits ? 0 : 1	
+    
+    const code = gb[selectedRow]
+    const temp = code.filter( c => c === 'p' ).length
+    const placed = code.filter( c => c === 's' ).length
+    fits = temp === 2 && placed === 1
+    if (fits) {
+      set = 0
+    } else {
+      set = 1;
+      gb = this.state.gameboard;
+    }
     this.setState({ gameboard: gb, set })
   }
 
